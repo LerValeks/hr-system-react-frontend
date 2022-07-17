@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import {React,  Component} from 'react';
+import {Link} from  'react-router-dom'
 import EmployeeService from '../Services/EmployeeService';
 
 class ListEmployeeComponent extends Component {
     constructor(props) {
         super(props)
-
+       
         this.state={
             employees: []
         }
-        
     }
 
     componentDidMount() {
@@ -17,10 +17,15 @@ class ListEmployeeComponent extends Component {
         });
     }
 
+    
+
     render() {
         return (
             <div>
                 <h2 className='text-center'>Employee List</h2>
+                <div className='row'>
+                    <Link to = '/add-employee' className='btn btn-primary' >Add Employee </Link>
+                </div>
                 <div className='row'>
                     <table className='table table-striped table-bordered'>
                         <thead>
