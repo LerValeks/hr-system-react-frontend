@@ -1,6 +1,11 @@
 import {React,  Component} from 'react';
 import {Link} from  'react-router-dom'
 import EmployeeService from '../Services/EmployeeService';
+import { useNavigate } from "react-router-dom";
+
+export const  withNavigation = (Component : Component) => {
+    return props => <Component {...props} navigate={useNavigate()} />;
+  } 
 
 class ListEmployeeComponent extends Component {
     constructor(props) {
@@ -9,6 +14,8 @@ class ListEmployeeComponent extends Component {
         this.state={
             employees: []
         }
+        this.editEmployee= this.editEmployee.bind(this);
+
     }
 
     componentDidMount() {
@@ -17,7 +24,13 @@ class ListEmployeeComponent extends Component {
         });
     }
 
-    
+    editEmployee(id) {
+        this.props.navigate(`/update-employee/${id}`, {
+            state : {
+                employeeId: id
+            }
+        })
+    }
 
     render() {
         return (
@@ -44,6 +57,9 @@ class ListEmployeeComponent extends Component {
                                         <td>{employee.firstName}</td>
                                         <td>{employee.lastName}</td>
                                         <td>{employee.email}</td>
+                                        <td>
+                                            <button onClick={() => this.editEmployee(employee.id)} className = 'btn btn-info' >Update</button>
+                                        </td>
                                     </tr>
                                 )
                             }
@@ -56,4 +72,5 @@ class ListEmployeeComponent extends Component {
     }
 }
 
-export default ListEmployeeComponent;
+export default withNavigation(ListEmployeeComponent);
+

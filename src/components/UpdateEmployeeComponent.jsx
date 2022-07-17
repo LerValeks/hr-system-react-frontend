@@ -2,28 +2,43 @@ import React, { Component  } from 'react';
 import { Link } from 'react-router-dom'
 import EmployeeService from '../Services/EmployeeService';
 import { useNavigate } from "react-router-dom";
+import {useLocation} from 'react-router-dom';
 
-export const  withNavigation = (Component : Component) => {
-    return props => <Component {...props} navigate={useNavigate()} />;
+export const  withNavigationLocation = (Component : Component) => {
+    return props => <Component {...props} navigate={useNavigate()} location={useLocation()} />;
   } 
+  
 
-class CreateEmployeeComponent extends Component {
+
+class UpdateEmployeeComponent extends Component {
 
 
     constructor(props) {
         super(props)
-
+        
         this.state = {
+            id: this.props.location.state.employeeId,
             firstName: '',
-            lastName: '',
+            lastName: '',   
             email: ''
 
         }
         this.changeFirstNameHandler = this.changeFirstNameHandler.bind(this);
         this.changeLastNameHandler = this.changeLastNameHandler.bind(this);
         this.changeEmailHandler = this.changeEmailHandler.bind(this);
-        this.saveEmployee = this.saveEmployee.bind(this);
+        this.updateEmployee = this.updateEmployee.bind(this);
     }
+
+    componentDidMount(){
+        EmployeeService.getEmployeeById(this.state.id).then((res) => {
+           
+            let employee = res.data;
+            this.setState({firstName:employee.firstName,
+              lastName:employee.lastName,
+              email: employee.email})
+        });
+    }
+
 
     changeFirstNameHandler = (event) => {
         this.setState({ firstName: event.target.value })
@@ -37,7 +52,7 @@ class CreateEmployeeComponent extends Component {
         this.setState({ email: event.target.value })
     }
 
-    saveEmployee = (e) => {
+    updateEmployee = (e) => {
         e.preventDefault();
         let employee = { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
         console.log('employee =>' + JSON.stringify(employee))
@@ -73,10 +88,14 @@ class CreateEmployeeComponent extends Component {
                                         <input placeholder='Email' name='email' className='form-control'
                                             value={this.state.email} onChange={this.changeEmailHandler} />
                                     </div>
-                                    
-                                                                       
-                                    <button className='btn btn-success' onClick={this.saveEmployee}>Save</button>
+                                    <div className='form-group'>
+                                        <label> Email</label>
+                                        <input placeholder='test' name='test' className='form-control'
+                                            value={this.state.email} onChange={this.changeEmailHandler} />
+                                    </div>
+                                    <button className='btn btn-success' onClick={this.updateEmployee}>Update</button>
                                     <Link to='/employees' className='btn btn-danger' style={{ marginLeft: '10px' }}>Cancel</Link>
+                                 
                                 </form>
                             </div>
                         </div>
@@ -88,4 +107,4 @@ class CreateEmployeeComponent extends Component {
 }
 
 
-export default withNavigation(CreateEmployeeComponent);
+export default withNavigationLocation(UpdateEmployeeComponent);
