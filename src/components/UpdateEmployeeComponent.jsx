@@ -57,8 +57,7 @@ class UpdateEmployeeComponent extends Component {
         let employee = { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
         console.log('employee =>' + JSON.stringify(employee))
 
-        EmployeeService.createEmployee(employee).then(res=>{
-            console.log(res.data);
+        EmployeeService.updateEmployeeById(employee, this.state.id).then(res=>{
             this.props.navigate('/employees')
         });
     }
@@ -86,11 +85,6 @@ class UpdateEmployeeComponent extends Component {
                                     <div className='form-group'>
                                         <label> Email</label>
                                         <input placeholder='Email' name='email' className='form-control'
-                                            value={this.state.email} onChange={this.changeEmailHandler} />
-                                    </div>
-                                    <div className='form-group'>
-                                        <label> Email</label>
-                                        <input placeholder='test' name='test' className='form-control'
                                             value={this.state.email} onChange={this.changeEmailHandler} />
                                     </div>
                                     <button className='btn btn-success' onClick={this.updateEmployee}>Update</button>
